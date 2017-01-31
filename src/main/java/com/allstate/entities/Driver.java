@@ -26,8 +26,7 @@ public class Driver {
     private List<Car> cars;
     private boolean banned;
     private int tickets;
-//    private Map<Integer, String> comments;
-//    private Map<Integer, Integer> ratings;
+    private List<Review> reviews;
     private double avgRating;
     private Date created;
     private Date modified;
@@ -109,18 +108,16 @@ public class Driver {
         this.banned = tickets > 3;
     }
 
-//    public Map<Integer, String> getComments() {
-//        return comments;
-//    }
-//    public void setComments(String comment) {
-//        this.comments.add(comment);
-//    }
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "driver")
+    @JsonIgnore
+    public List<Review> getReviews() {
+        return reviews;
+    }
+    public void setReviews(List<Review> reviews){
+        this.reviews = reviews;
+    }
 //
-//    public Map<Integer, Integer> getRatings() {
-//        return ratings;
-//    }
-//    public void setRatings( int rating) {
-//        this.ratings.add(rating);
-//        this.banned = avgRating < 1.5;
+//    public void setReviews(Review review) {
+//        this.reviews.add(review);
 //    }
 }

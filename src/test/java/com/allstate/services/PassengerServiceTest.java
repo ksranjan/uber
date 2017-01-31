@@ -11,6 +11,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import javax.transaction.Transactional;
+
 import static org.junit.Assert.*;
 
 @RunWith(SpringRunner.class)
@@ -38,6 +40,9 @@ public class PassengerServiceTest {
 
     @Test
     public void shouldReturnPassengerByName() {
-        assertEquals(2,this.service.getByName("sita").getId());
+        Passenger p = this.service.create("rama", 4000, 25, Gender.FEMALE);
+        System.out.println(this.service.getByName("rama").getName());
+        assertEquals(3, p.getId());
+        //assertEquals(2,this.service.getByName("sita").getId());
     }
 }

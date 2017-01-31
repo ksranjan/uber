@@ -2,6 +2,7 @@ package com.allstate.entities;
 
 import com.allstate.enums.CarType;
 import com.allstate.enums.DayTime;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -9,6 +10,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "trips")
@@ -25,9 +27,6 @@ public class Trip {
     private double totalCost;
     private Date created;
     private Date modified;
-    private int city_id;
-    private int passenger_id;
-    private int car_id;
     private DayTime time;
     private double rate;
     private Car car;
@@ -37,6 +36,10 @@ public class Trip {
     private int dRating;
     private String dComment;
     private int tickets;
+    private List<Review> reviews;
+//    private Review dReview;
+//    private Review pReview;
+    private Review review;
 
     public Trip() {
     }
@@ -55,17 +58,17 @@ public class Trip {
         this.passenger = passenger;
         this.pComment = pComment;
         this.pRating = pRating;
-//        passenger.setComments(this.getId(), pComment);
-//        passenger.setRatings(this.getId(), pRating);
         this.dComment = dComment;
         this.dRating = dRating;
         this.tickets = tickets;
-//        car.getDriver().setRatings(this.getId(), dRating);
-//        car.getDriver().setComments(this.getId(), dComment);
-//        car.getDriver().setTickets(tickets);
-//        car.getDriver().setRatings(dRating);
-//        car.getDriver().setComments(dComment);
-//        car.getDriver().setTickets(tickets);
+        this.car = car;
+        car.getDriver().setTickets(tickets);
+        this.review = new Review(car.getDriver(), this, passenger, pRating, pComment, dRating, dComment);
+//        this.dReview = new Review(car.getDriver(), this, null, dRating, dComment);
+//        this.pReview = new Review(null, this, passenger, pRating, pComment);
+        reviews.add(review);
+        passenger.setReviews(reviews);
+        car.getDriver().setReviews(reviews);
     }
 
     @Id
@@ -151,4 +154,29 @@ public class Trip {
     public void setPassenger(Passenger passenger) {
         this.passenger = passenger;
     }
+
+    @OneToOne(cascade = CascadeType.ALL, mappedBy = "trip")
+    @JsonIgnore
+    public Review getReview() {
+        return review;
+    }
+
+    public void setReview(Review review) {
+        this.review = review;
+    }
+    //    public Review getdReview() {
+//        return dReview;
+//    }
+//
+//    public void setdReview(Review dReview) {
+//        this.dReview = dReview;
+//    }
+//
+//    public Review getpReview() {
+//        return pReview;
+//    }
+//
+//    public void setpReview(Review pReview) {
+//        this.pReview = pReview;
+//    }
 }

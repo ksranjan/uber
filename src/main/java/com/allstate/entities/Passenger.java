@@ -1,6 +1,7 @@
 package com.allstate.entities;
 
 import com.allstate.enums.Gender;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -9,6 +10,7 @@ import javax.persistence.*;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 @Entity
@@ -23,9 +25,7 @@ public class Passenger {
     private Gender gender;
     private Date created;
     private Date modified;
-//    private Map<Integer, String> comments;
-//    private Map<Integer, Integer> ratings;
-
+    private List<Review> reviews;
 
     public Passenger() {
     }
@@ -105,19 +105,15 @@ public class Passenger {
         this.modified = modified;
     }
 
-//    public Map<Integer, String> getComments() {
-//        return comments;
-//    }
-//
-//    public void setComments(int tId, String comment) {
-//        this.comments.put(tId, comment);
-//    }
-//
-//    public Map<Integer, Integer> getRatings() {
-//        return ratings;
-//    }
-//
-//    public void setRatings(int tId, int rating) {
-//        this.ratings.put(tId, rating);
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "passenger")
+    @JsonIgnore
+    public List<Review> getReviews() {
+        return reviews;
+    }
+    public void setReviews(List<Review> reviews){
+        this.reviews = reviews;
+    }
+//    public void setReviews(Review review) {
+//        this.reviews.add(review);
 //    }
 }
