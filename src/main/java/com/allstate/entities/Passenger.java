@@ -11,7 +11,6 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 @Entity
 @Table(name = "passengers")
@@ -25,7 +24,7 @@ public class Passenger {
     private Gender gender;
     private Date created;
     private Date modified;
-    private List<Review> reviews;
+    private List<Trip> trips;
 
     public Passenger() {
     }
@@ -107,13 +106,11 @@ public class Passenger {
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "passenger")
     @JsonIgnore
-    public List<Review> getReviews() {
-        return reviews;
+    public List<Trip> getTrips() {
+        return trips;
     }
-    public void setReviews(List<Review> reviews){
-        this.reviews = reviews;
+
+    public void setTrips(List<Trip> trips) {
+        this.trips = trips;
     }
-//    public void setReviews(Review review) {
-//        this.reviews.add(review);
-//    }
 }

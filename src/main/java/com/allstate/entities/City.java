@@ -1,6 +1,7 @@
 package com.allstate.entities;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -8,6 +9,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name="cities")
@@ -21,6 +23,7 @@ public class City {
     private Date modified;
     private double dayRate;
     private double nightRate;
+    private List<Trip> trips;
 
     public City() {
     }
@@ -96,5 +99,16 @@ public class City {
     public void setNightRate(double nightRate) {
         this.nightRate = nightRate;
     }
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "city")
+    @JsonIgnore
+    public List<Trip> getTrips() {
+        return trips;
+    }
+
+    public void setTrips(List<Trip> trips) {
+        this.trips = trips;
+    }
+
 }
 

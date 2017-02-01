@@ -2,7 +2,6 @@ package com.allstate.entities;
 
 import com.allstate.enums.CarType;
 import com.allstate.enums.DayTime;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -10,7 +9,6 @@ import org.hibernate.annotations.UpdateTimestamp;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
-import java.util.List;
 
 @Entity
 @Table(name = "trips")
@@ -27,7 +25,7 @@ public class Trip {
     private double totalCost;
     private Date created;
     private Date modified;
-    private DayTime time;
+    private DayTime dayTime;
     private double rate;
     private Car car;
     private Passenger passenger;
@@ -36,22 +34,18 @@ public class Trip {
     private int dRating;
     private String dComment;
     private int tickets;
-    private List<Review> reviews;
-//    private Review dReview;
-//    private Review pReview;
-    private Review review;
 
     public Trip() {
     }
 
-    public Trip(Date startTime, Date endTime, double distance, City city, int tipPercent, DayTime time, Car car, Passenger passenger , String pComment, int pRating, String dComment, int dRating, int tickets) {
+    public Trip(Date startTime, Date endTime, double distance, City city, int tipPercent, DayTime dayTime, Car car, Passenger passenger , String pComment, int pRating, String dComment, int dRating, int tickets) {
         this.startTime = startTime;
         this.endTime = endTime;
         this.distance = distance;
         this.city = city;
         this.tipPercent = tipPercent;
-        this.time = time;
-        this.rate =  time.equals(DayTime.DAY) ? city.getDayRate() : city.getNightRate();
+        this.dayTime = dayTime;
+        this.rate =  dayTime.equals(DayTime.DAY) ? city.getDayRate() : city.getNightRate();
         this.rate += car.getType().equals(CarType.BASIC) ? 0 : 5;
         this.cost = distance * this.rate;
         this.totalCost = cost + (cost * tipPercent)/100;
@@ -63,12 +57,6 @@ public class Trip {
         this.tickets = tickets;
         this.car = car;
         car.getDriver().setTickets(tickets);
-        this.review = new Review(car.getDriver(), this, passenger, pRating, pComment, dRating, dComment);
-//        this.dReview = new Review(car.getDriver(), this, null, dRating, dComment);
-//        this.pReview = new Review(null, this, passenger, pRating, pComment);
-        reviews.add(review);
-        passenger.setReviews(reviews);
-        car.getDriver().setReviews(reviews);
     }
 
     @Id
@@ -155,28 +143,66 @@ public class Trip {
         this.passenger = passenger;
     }
 
-    @OneToOne(cascade = CascadeType.ALL, mappedBy = "trip")
-    @JsonIgnore
-    public Review getReview() {
-        return review;
+    @Column(name = "p_rating")
+    public int getpRating() {
+        return pRating;
     }
 
-    public void setReview(Review review) {
-        this.review = review;
+    public void setpRating(int pRating) {
+        this.pRating = pRating;
     }
-    //    public Review getdReview() {
-//        return dReview;
-//    }
-//
-//    public void setdReview(Review dReview) {
-//        this.dReview = dReview;
-//    }
-//
-//    public Review getpReview() {
-//        return pReview;
-//    }
-//
-//    public void setpReview(Review pReview) {
-//        this.pReview = pReview;
-//    }
+
+    @Column(name = "p_comment")
+    public String getpComment() {
+        return pComment;
+    }
+
+    public void setpComment(String pComment) {
+        this.pComment = pComment;
+    }
+
+    @Column(name = "d_rating")
+    public int getdRating() {
+        return dRating;
+    }
+
+    public void setdRating(int dRating) {
+        this.dRating = dRating;
+    }
+
+    @Column(name = "d_comment")
+    public String getdComment() {
+        return dComment;
+    }
+
+    public void setdComment(String dComment) {
+        this.dComment = dComment;
+    }
+
+    @Column(columnDefinition = "ENUM('DAY', 'NIGHT')")
+    @Enumerated(EnumType.STRING)
+    @NotNull
+    public DayTime getDayTime() {
+        return dayTime;
+    }
+
+    public void setDayTime(DayTime dayTime) {
+        this.dayTime = dayTime;
+    }
+
+    public double getRate() {
+        return rate;
+    }
+
+    public void setRate(double rate) {
+        this.rate = rate;
+    }
+
+    public double getTotalCost() {
+        return totalCost;
+    }
+
+    public void setTotalCost(double totalCost) {
+        this.totalCost = totalCost;
+    }
 }

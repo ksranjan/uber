@@ -6,7 +6,7 @@ CREATE TABLE `drivers` (
   `banned`     BOOLEAN        NOT NULL  DEFAULT FALSE,
   `gender`     ENUM('MALE', 'FEMALE') NOT NULL,
   `tickets`    INT            DEFAULT 0,
-  `avg_rating` DECIMAL(5,2),
+  `avg_rating` DECIMAL(5,2)   DEFAULT 5,
   `created`    TIMESTAMP      NOT NULL  DEFAULT NOW(),
   `modified`   TIMESTAMP      NOT NULL  DEFAULT NOW(),
   PRIMARY KEY (`id`));

@@ -19,7 +19,19 @@ public class PassengerService {
         return this.repository.save(new Passenger(name, balance, age, gender ));
     }
 
+    public Passenger getById(int id){
+        return this.repository.findOne(id);
+    }
     public Passenger getByName(String name){
         return this.repository.findByName(name);
+    }
+
+    public Iterable<Passenger> getAll(){
+        return this.repository.findAll();
+    }
+    public void deleteById(int id){
+        if(this.repository.findOne(id).getTrips().size() == 0){
+            this.repository.delete(id);
+        }
     }
 }

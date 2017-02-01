@@ -13,6 +13,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.transaction.Transactional;
 
+import java.util.ArrayList;
+
 import static org.junit.Assert.*;
 
 @RunWith(SpringRunner.class)
@@ -39,10 +41,33 @@ public class PassengerServiceTest {
     }
 
     @Test
-    public void shouldReturnPassengerByName() {
-        Passenger p = this.service.create("rama", 4000, 25, Gender.FEMALE);
-        System.out.println(this.service.getByName("rama").getName());
-        assertEquals(3, p.getId());
-        //assertEquals(2,this.service.getByName("sita").getId());
+    public void shouldReturnPassengerById(){
+        assertEquals("sita", this.service.getById(2).getName());
     }
+    @Test
+    public void shouldReturnPassengerByName() {
+        assertEquals(2,this.service.getByName("sita").getId());
+    }
+
+    @Test
+    public void shouldGetAllPassengers(){
+        ArrayList<Passenger> passengers = (ArrayList)this.service.getAll();
+        assertEquals(2, passengers.size());
+    }
+    @Test
+    @org.springframework.transaction.annotation.Transactional
+    public void shouldDeletePassengerIfNOTrip(){
+        this.service.deleteById(2);
+        ArrayList<Passenger> passengers = (ArrayList)this.service.getAll();
+        assertEquals(1, passengers.size());
+    }
+
+    @Test
+    @org.springframework.transaction.annotation.Transactional
+    public void shouldNotDeletePassengerIfNOTrip(){
+        this.service.deleteById(1);
+        ArrayList<Passenger> passengers = (ArrayList)this.service.getAll();
+        assertEquals(2, passengers.size());
+    }
+
 }
